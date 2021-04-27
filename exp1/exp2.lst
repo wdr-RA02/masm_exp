@@ -1,0 +1,71 @@
+Microsoft (R) Macro Assembler Version 6.11		    03/30/21 11:30:15
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+				    ;必须加$，否则会乱码
+ 0000 48 45 4C 4C 4F 20		    MESSAGE DB 'HELLO WORLD.$'
+       57 4F 52 4C 44 2E
+       24
+ 000D				DATAS ENDS
+
+ 0000				STACKS SEGMENT PARA STACK 'STACK'
+				    ;此处输入堆栈段代码
+				    ;分配堆栈
+ 0000  0400 [			    DB 400H DUP(0)
+        00
+       ]
+ 0400				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START PROC FAR
+				;START: PROC FAR
+ 0000  1E				PUSH DS
+ 0001  B8 0000				MOV AX,0
+ 0004  50				PUSH AX	;返回dos
+					
+ 0005  B8 ---- R		    MOV AX,DATAS
+ 0008  8E D8			    MOV DS,AX
+				    ;此处输入代码段代码
+				    
+ 000A  8D 16 0000 R		    LEA DX,MESSAGE
+ 000E  B4 09			    MOV AH,9;调用9号中断显示字符串
+				    
+
+ 0010  CD 21			    INT 21H
+ 0012  CB			    RET
+ 0013				START ENDP
+ 0013				CODES ENDS
+				    END START
+Microsoft (R) Macro Assembler Version 6.11		    03/30/21 11:30:15
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0013	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 000D	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0400	  Para	  Stack	  'STACK'	 
+
+
+Procedures,  parameters and locals:
+
+                N a m e                 Type     Value    Attr
+
+START  . . . . . . . . . . . . .	P Far	 0000	  CODES	Length= 0013 Public
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+MESSAGE  . . . . . . . . . . . .	Byte	 0000	  DATAS	
+
+	   0 Warnings
+	   0 Errors

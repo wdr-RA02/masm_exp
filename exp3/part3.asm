@@ -1,0 +1,37 @@
+DATAS SEGMENT
+    ;make offset 100h
+    ORG 100H
+    DTA   DB 0
+DATAS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+
+    LEA SI, DTA
+    MOV BL, 0
+    MOV AH, 0
+    MOV CH, 0
+    MOV CL, [SI]
+    MOV BH, CH
+    INC SI
+    
+DETER:
+    MOV AL,[SI]
+    AND AL,80H
+    JNS CONTINUE
+	;NEGATIVE, BL+=1
+	INC BL
+CONTINUE:
+	INC SI
+	LOOP DETER
+	
+	MOV [SI],BL
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START
+
+

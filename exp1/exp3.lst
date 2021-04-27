@@ -1,0 +1,84 @@
+Microsoft (R) Macro Assembler Version 6.11		    04/01/21 16:25:55
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000 64			    BUF DB 100
+ 0001  00			    	DB ?
+ 0002  0064 [			    	DB 100 DUP(?)	;键盘信息
+        00
+       ]
+ 0066 77 68 61 74 20 69		    MSG DB 'what is your name? ','$'
+       73 20 79 6F 75 72
+       20 6E 61 6D 65 3F
+       20 24
+				    
+ 007A				DATAS ENDS
+
+ 0000				STACKS SEGMENT
+				    ;此处输入堆栈段代码
+ 0000				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    ;此处输入代码段代码
+ 0005  8D 16 0066 R		    LEA DX,MSG
+ 0009  B4 09			    MOV AH,9	;显示提示信息
+ 000B  CD 21			    INT 21H
+				    
+ 000D  8D 16 0000 R		    LEA DX,BUF
+ 0011  B4 0A			    MOV AH,0AH  ; 接受输入
+ 0013  CD 21			    INT 21H
+				    
+				    ;输出部分
+ 0015  33 DB			    XOR BX,BX
+ 0017  8D 36 0000 R		    LEA SI,BUF
+				    
+ 001B  B1 0A			    MOV CL,0AH
+ 001D  88 0C			    MOV [SI],CL
+ 001F  46			    INC SI
+ 0020  8A 1C			    MOV BL,BYTE PTR[SI]
+				    
+ 0022  B1 00			    MOV CL,0
+ 0024  88 0C			    MOV [SI],CL
+				    
+ 0026  C6 87 0002 R 24		    MOV BUF[BX+2],"$"
+				    ;ADD SI,2
+ 002B  B4 09			    MOV AH,9
+ 002D  CD 21			    INT 21H
+				    
+ 002F  B4 4C			    MOV AH,4CH
+ 0031  CD 21			    INT 21H
+ 0033				CODES ENDS
+				    END START
+
+
+Microsoft (R) Macro Assembler Version 6.11		    04/01/21 16:25:55
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 0033	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 007A	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0000	  Para	  Private 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+BUF  . . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+MSG  . . . . . . . . . . . . . .	Byte	 0066	  DATAS	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+
+	   0 Warnings
+	   0 Errors

@@ -1,0 +1,87 @@
+Microsoft (R) Macro Assembler Version 6.11		    03/30/21 11:20:27
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				DATAS SEGMENT
+				    ;此处输入数据段代码  
+ 0000 02 05 00 03 FC 05		    ARRAY1 DB 2,5,0,3,-4,5,0,0AH,0FH
+       00 0A 0F
+ 0009 03 05 04 FE 00 08		    ARRAY2 DB 3,5,4,-2,0,8,3,-0AH,20H
+       03 F6 20
+ 0012 09			    COUNT  DB $-ARRAY2
+				    ;count计算array2长度，=9
+ 0013 00			    LEN    DB ?
+				    ;分配1byte的空间
+ 0014  0020 [			    SUM    DB 20H DUP(0)
+        00
+       ]
+ 0034				DATAS ENDS
+
+ 0000				STACKS SEGMENT PARA STACK 'STACK'
+ 0000  0020 [				DW 20H DUP(0)
+        0000
+       ]
+				    ;此处输入堆栈段代码
+ 0040				STACKS ENDS
+
+ 0000				CODES SEGMENT
+				    ASSUME CS:CODES,DS:DATAS,SS:STACKS
+ 0000				START:
+ 0000  B8 ---- R		    MOV AX,DATAS
+ 0003  8E D8			    MOV DS,AX
+				    ;此处输入代码段代码
+				    
+ 0005  BB FFFF			    MOV BX,-1	
+ 0008  B9 0000			    MOV CX,0
+ 000B  8A 0E 0012 R		    MOV CL,COUNT
+				    
+ 000F				NOZERO:
+				;循环求和的意思吧
+ 000F  43				INC BX
+ 0010  8A 87 0000 R			MOV AL,ARRAY1[BX]
+ 0014  02 87 0009 R			ADD AL,ARRAY2[BX]
+					
+ 0018  88 87 0014 R			MOV SUM[BX],AL
+					;CX--,CX>0则跳转
+ 001C  E0 F1				LOOPNE NOZERO
+					;同JZ
+ 001E  74 02				JE ENDO
+ 0020  FE C3				INC BL
+ 0022				ENDO:
+ 0022  88 1E 0013 R			MOV LEN,BL
+					
+					
+ 0026  B4 4C			    MOV AH,4CH
+ 0028  CD 21			    INT 21H
+ 002A				CODES ENDS
+				    END START
+Microsoft (R) Macro Assembler Version 6.11		    03/30/21 11:20:27
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODES  . . . . . . . . . . . . .	16 Bit	 002A	  Para	  Private 
+DATAS  . . . . . . . . . . . . .	16 Bit	 0034	  Para	  Private 
+STACKS . . . . . . . . . . . . .	16 Bit	 0040	  Para	  Stack	  'STACK'	 
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+ARRAY1 . . . . . . . . . . . . .	Byte	 0000	  DATAS	
+ARRAY2 . . . . . . . . . . . . .	Byte	 0009	  DATAS	
+COUNT  . . . . . . . . . . . . .	Byte	 0012	  DATAS	
+ENDO . . . . . . . . . . . . . .	L Near	 0022	  CODES	
+LEN  . . . . . . . . . . . . . .	Byte	 0013	  DATAS	
+NOZERO . . . . . . . . . . . . .	L Near	 000F	  CODES	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODES	
+SUM  . . . . . . . . . . . . . .	Byte	 0014	  DATAS	
+
+	   0 Warnings
+	   0 Errors

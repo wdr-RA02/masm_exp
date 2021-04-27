@@ -1,0 +1,64 @@
+;part4 of exp2: hex to ascii
+DATAS SEGMENT
+;datas 
+    SRC DW 3500H
+    DES DW 3510H  
+    COUNT DW 4
+DATAS ENDS
+
+CODES SEGMENT
+    ASSUME CS:CODES,DS:DATAS
+START:
+    MOV AX,DATAS
+    MOV DS,AX
+;code start
+
+	;dest index
+	MOV DI, DES
+	MOV SI, SRC
+	MOV BX, [SI]
+	
+	MOV CX, COUNT
+	MOV DX, 0
+	;DEC CX
+	
+CALC:
+	; DL=BL & 0xF,取后四位
+	MOV DL, BL
+	AND DL, 0FH
+	
+	CMP DL, 10
+	JAE LETTER
+NUMBER:
+	; DL=0~9, +30H
+	ADD DL, 30H
+	JMP NEXT
+LETTER:
+	; DL=A~F, +37H
+	ADD DL, 37H
+NEXT:
+	; DL->DI[i]
+	MOV [DI], DL
+	INC DI
+	
+	; BX=>>4
+	MOV DH,CL
+	MOV CL,4
+	SAR BX,CL
+	MOV CL,DH
+	MOV DH,0
+
+	LOOP CALC
+
+;code end
+    MOV AH,4CH
+    INT 21H
+CODES ENDS
+    END START
+
+
+
+
+
+
+
